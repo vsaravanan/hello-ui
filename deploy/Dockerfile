@@ -8,7 +8,13 @@
 FROM node:20-alpine
 WORKDIR /app
 
-RUN npm install -g pnpm
+RUN cd /data/fe/hello-ui
+RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
+RUN nvm install --lts
+
+RUN echo pnpm -v; npm -v; nvm -v; node -v
+
+# RUN npm install -g pnpm
 
 COPY package.json pnpm-lock.yaml ./
 
