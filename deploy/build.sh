@@ -17,7 +17,7 @@ pnpm install --frozen-lockfile
 
 log_step "Build with pnpm"
 cd /data/fe/hello-ui
-pnpm run build
+pnpm build
 
 log_step "Build image with Buildah"
 cd /data/fe/hello-ui
