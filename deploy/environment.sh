@@ -6,6 +6,6 @@
 
 FRONTEND_GIT_URL="https://github.com/vsaravanan/hello-ui.git"
 FRONTEND_DIR="/data/fe/hello-ui"
-UI_IMAGE="localhost/hello-ui:latest"
+UI_IMAGE="k8master:5000/hello-ui:latest"
 
 HOST="k8master"

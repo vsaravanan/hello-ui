@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: hello-ui
-          image: localhost/hello-ui:latest
+          image: k8master:5000/hello-ui:latest
           ports:
             - containerPort: 3000
 ---
