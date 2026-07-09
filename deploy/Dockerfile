@@ -5,7 +5,7 @@
 # k8master-build-ui.sh before this runs, so this is a single stage -
 # no separate builder/runner containers, just package and run.
 
-FROM node:20-alpine
+FROM node:22-alpine
 WORKDIR /app
 
 # RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
@@ -13,7 +13,7 @@ WORKDIR /app
 
 RUN npm install -g npm
 
-RUN npm install -g pnpm@9.15.0
+RUN npm install -g pnpm
 
 
 COPY package.json pnpm-lock.yaml ./
