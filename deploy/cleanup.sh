@@ -5,7 +5,9 @@
 set -exuo pipefail
 
 REMOTE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$REMOTE_DIR/environment.sh"
 source "$REMOTE_DIR/common.sh"
+
 
 log_step "Remove leftover hello-ui validation check pod"
 kubectl delete pod curl-ui-check --ignore-not-found

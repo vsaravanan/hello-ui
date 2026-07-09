@@ -8,8 +8,8 @@ set -exuo pipefail
 
 
 REMOTE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-source "$REMOTE_DIR/common.sh"
 source "$REMOTE_DIR/environment.sh"
+source "$REMOTE_DIR/common.sh"
 
 log_step "Install dependencies with pnpm"
 cd /data/fe/hello-ui
