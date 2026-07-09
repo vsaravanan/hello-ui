@@ -11,6 +11,7 @@ WORKDIR /app
 # RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
 # RUN nvm install --lts
 
+RUN npm install -g npm
 
 RUN npm install -g pnpm
 
