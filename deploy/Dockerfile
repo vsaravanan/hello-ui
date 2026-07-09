@@ -11,11 +11,8 @@ WORKDIR /app
 # RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
 # RUN nvm install --lts
 
-RUN echo "pnpm: $(pnpm -v)" && \
-    echo "npm: $(npm -v)" && \
-    echo "node: $(node -v)"
 
-# RUN npm install -g pnpm
+RUN npm install -g pnpm
 
 COPY package.json pnpm-lock.yaml ./
 
