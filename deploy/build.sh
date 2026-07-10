@@ -43,7 +43,7 @@ if [ "${1:-}" = "base" ]; then
     log_step "✅ Base image built and pushed!"
 fi
 
-mv "$deploy_path/.current_tag_ui" "$deploy_path/.previous_tag_ui"
+mv "$deploy_path/.current_tag_ui" "$deploy_path/.previous_tag_ui"  || true
 log_step "🚀 buildah building latest image  $ui_image ..."
 buildah bud -t "$ui_image" -f deploy/Dockerfile .
 
