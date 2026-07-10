@@ -7,8 +7,8 @@ set -euo pipefail
 START_TIME=$(date +%s)
 
 
-source "$deploy_path/environment.sh"
-source "$deploy_path/common.sh"
+remote_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$remote_dir/common.sh"
 
 
 

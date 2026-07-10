@@ -4,8 +4,8 @@
 
 set -euo pipefail
 
-source "$deploy_path/environment.sh"
-source "$deploy_path/common.sh"
+remote_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$remote_dir/common.sh"
 
 log_step "Read previous image tag"
 PREVIOUS_TAG="$(cat "$deploy_path/.previous_tag_ui")"
