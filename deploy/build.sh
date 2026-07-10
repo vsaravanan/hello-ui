@@ -5,6 +5,7 @@
 
 set -euo pipefail
 
+START_TIME=$(date +%s)
 
 
 REMOTE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -32,3 +33,11 @@ buildah push --tls-verify=false \
     "${UI_IMAGE}" "docker://${UI_IMAGE}"
 
 log_info "build-ui complete on k8master. Image: $UI_IMAGE"
+
+
+END_TIME=$(date +%s)
+ELAPSED=$((END_TIME - START_TIME))
+MINUTES=$((ELAPSED / 60))
+SECONDS=$((ELAPSED % 60))
+
+log_info "✅ Done! Total time: ${MINUTES}m ${SECONDS}s"
