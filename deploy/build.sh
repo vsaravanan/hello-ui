@@ -37,14 +37,18 @@ cd "$project_path"
 
 
 if [ "${1:-}" = "base" ]; then
-    log_step "🚀 buildah building base image  $ui_image_base ..."
+    log_step "🚀 buildah building base image  $ui_image_base ...
+    buildah bud -t $ui_image_base -f deploy/Dockerfile.base "
     buildah bud -t "$ui_image_base" -f deploy/Dockerfile.base
+
+    log_info "buildah push --tls-verify=false $ui_image_base docker://${ui_image_base}"
     buildah push --tls-verify=false "$ui_image_base" "docker://${ui_image_base}"
     log_step "✅ Base image built and pushed!"
 fi
 
 mv "$deploy_path/.current_tag_ui" "$deploy_path/.previous_tag_ui"  || true
-log_step "🚀 buildah building latest image  $ui_image ..."
+log_step '🚀 buildah building latest image  $ui_image ...
+buildah bud -t "$ui_image" -f deploy/Dockerfile .'
 buildah bud -t "$ui_image" -f deploy/Dockerfile .
 
 log_step "Record current git commit as the deployment tag"

@@ -8,7 +8,8 @@ remote_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$remote_dir/common.sh"
 
 
-log_step "Remove leftover $module validation check pod"
+log_step "Remove leftover $module validation check pod
+    kubectl delete pod curl-ui-check --ignore-not-found "
 kubectl delete pod curl-ui-check --ignore-not-found
 
 log_info "cleanup-ui complete on k8master."
