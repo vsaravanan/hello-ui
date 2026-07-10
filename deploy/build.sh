@@ -12,6 +12,16 @@ REMOTE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$REMOTE_DIR/environment.sh"
 source "$REMOTE_DIR/common.sh"
 
+log_step "check out source code"
+cd /data/fe/hello-ui/deploy
+
+git reset --hard
+git fetch 
+git checkout 
+git pull 
+chmod +x  *.sh deploy/*.sh
+
+
 log_step "Install dependencies with pnpm"
 cd /data/fe/hello-ui
 pnpm install --frozen-lockfile
