@@ -2,7 +2,10 @@ kubectl delete deployment nginx-test --ignore-not-found
 kubectl delete svc nginx-test --ignore-not-found
 
 
-clear; kubectl get all -A
+kubectl delete deployment hello-ui --ignore-not-found
+kubectl delete svc hello-ui-svc --ignore-not-found
+
+clear; kubectl get all -A 
 
 
 NAMESPACE      NAME                                   READY   STATUS    RESTARTS        AGE
