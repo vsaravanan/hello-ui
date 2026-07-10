@@ -22,6 +22,15 @@ pnpm build
 
 log_step "Build image with Buildah"
 cd /data/fe/hello-ui
+
+
+if [ "$1" = "base" ]; then
+    log_step "🚀 Building base image..."
+    buildah bud -t "$UI_IMAGE_BASE" -f deploy/Dockerfile.base
+    buildah push --tls-verify=false "$UI_IMAGE_BASE" "docker://${UI_IMAGE_BASE}"
+    log_step "✅ Base image built and pushed!"
+fi
+
 buildah bud -t "$UI_IMAGE" -f deploy/Dockerfile .
 
 log_step "Record current git commit as the deployment tag"
@@ -41,4 +50,5 @@ ELAPSED=$((END_TIME - START_TIME))
 MINUTES=$((ELAPSED / 60))
 SECONDS=$((ELAPSED % 60))
 
-log_info "✅ Done! Total time: ${MINUTES}m ${SECONDS}s"
+
+log_time START_TIME

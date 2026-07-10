@@ -23,3 +23,15 @@ log_step() {
     echo "STEP: $1"
     echo "========================================"
 }
+
+
+log_time() {
+    local start_time=$1
+    local end_time=$(date +%s)
+    local elapsed=$((end_time - start_time))
+    local minutes=$((elapsed / 60))
+    local seconds=$((elapsed % 60))
+    
+    log_info "✅ Done! Total time: ${minutes}m ${seconds}s"
+
+}

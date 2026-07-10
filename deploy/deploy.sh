@@ -4,6 +4,8 @@
 
 set -euo pipefail
 
+START_TIME=$(date +%s)
+
 
 REMOTE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$REMOTE_DIR/environment.sh"
@@ -30,3 +32,5 @@ kubectl rollout status deployment/hello-ui
 
 
 log_info "deploy-ui complete on k8master."
+
+log_time START_TIME

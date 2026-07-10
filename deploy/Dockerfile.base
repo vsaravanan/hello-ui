@@ -5,16 +5,20 @@
 # k8master-build-ui.sh before this runs, so this is a single stage -
 # no separate builder/runner containers, just package and run.
 
-FROM k8master:5000/hello-ui-base:latest
+FROM node:22-alpine
+WORKDIR /app
 
-COPY . .
+# RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
+# RUN nvm install --lts
+
+RUN npm install -g npm
+
+RUN npm add -g pnpm
+
+RUN npm install -g pnpm
+
+
+COPY package.json pnpm-lock.yaml ./
 
 # Install dependencies
 RUN pnpm install --frozen-lockfile --ignore-scripts
-
-RUN pnpm build
-
-ENV NODE_ENV=production
-
-EXPOSE 3000
-CMD ["pnpm", "start"]
