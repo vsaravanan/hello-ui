@@ -35,3 +35,5 @@ log_time() {
     log_info "✅ Done! Total time: ${minutes}m ${seconds}s"
 
 }
+
+source "$remote_dir/environment.sh"
