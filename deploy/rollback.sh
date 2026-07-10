@@ -17,7 +17,7 @@ if [ "$PREVIOUS_TAG" = "none" ]; then
 fi
 
 log_step "Roll back hello-ui deployment
-kubectl set image deployment/$module $module=$PREVIOUS_TAG"
+kubectl set image deployment/$module $module='$PREVIOUS_TAG'"
 kubectl set image deployment/$module $module="$PREVIOUS_TAG"
 
 log_step "Wait for rollback rollout to finish
