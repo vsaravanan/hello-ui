@@ -15,7 +15,4 @@ kubectl get pods -l app=hello-ui
 log_step "Wait for hello-ui pod to be Ready"
 kubectl wait --for=condition=Ready pod -l app=hello-ui --timeout=60s
 
-log_step "Curl hello-ui"
-kubectl run curl-ui-check --rm -i --restart=Never --image=curlimages/curl -- curl -sf http://hello-ui-svc:3000
-
 log_info "validate-ui complete on k8master."

@@ -31,6 +31,7 @@ if [ "${1:-}" = "base" ]; then
     log_step "✅ Base image built and pushed!"
 fi
 
+mv /data/fe/hello-ui/deploy/.current_tag_ui /data/fe/hello-ui/deploy/.previous_tag_ui
 buildah bud -t "$UI_IMAGE" -f deploy/Dockerfile .
 
 log_step "Record current git commit as the deployment tag"

@@ -13,9 +13,9 @@ source "$REMOTE_DIR/common.sh"
 
 
 
-log_step "Save current image as previous tag (for rollback)"
-kubectl get deployment hello-ui -o jsonpath='{.spec.template.spec.containers[0].image}' > /data/fe/hello-ui/deploy/.previous_tag_ui 2>/dev/null || echo "none" > /data/fe/hello-ui/deploy/.previous_tag_ui
-cat /data/fe/hello-ui/deploy/.previous_tag_ui
+# log_step "Save current image as previous tag (for rollback)"
+# kubectl get deployment hello-ui -o jsonpath='{.spec.template.spec.containers[0].image}' > /data/fe/hello-ui/deploy/.previous_tag_ui 2>/dev/null || echo "none" > /data/fe/hello-ui/deploy/.previous_tag_ui
+# cat /data/fe/hello-ui/deploy/.previous_tag_ui
 
 kubectl delete deployment hello-ui --ignore-not-found
 kubectl delete svc hello-ui-svc --ignore-not-found
