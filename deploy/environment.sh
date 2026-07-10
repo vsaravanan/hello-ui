@@ -4,9 +4,12 @@
 # This file lives inside the hello-ui repo, so it's identical on the
 # host and on k8master once git pull has synced them.
 
-FRONTEND_GIT_URL="https://github.com/vsaravanan/hello-ui.git"
-FRONTEND_DIR="/data/fe/hello-ui"
-UI_IMAGE_BASE="k8master:5000/hello-ui-base:latest"
-UI_IMAGE="k8master:5000/hello-ui:latest"
+git_url="https://github.com/vsaravanan/hello-ui.git"
+module=hello-ui
+service=hello-ui-svc
+project_path=/data/fe/hello-ui
+deploy_path=/data/fe/hello-ui/deploy
+ui_image_base="k8master:5000/hello-ui-base:latest"
+ui_image="k8master:5000/hello-ui:latest"
 
 HOST="k8master"

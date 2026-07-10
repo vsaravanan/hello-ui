@@ -7,9 +7,8 @@ set -euo pipefail
 START_TIME=$(date +%s)
 
 
-REMOTE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-source "$REMOTE_DIR/environment.sh"
-source "$REMOTE_DIR/common.sh"
+source "$deploy_path/environment.sh"
+source "$deploy_path/common.sh"
 
 
 
@@ -17,18 +16,18 @@ source "$REMOTE_DIR/common.sh"
 # kubectl get deployment hello-ui -o jsonpath='{.spec.template.spec.containers[0].image}' > /data/fe/hello-ui/deploy/.previous_tag_ui 2>/dev/null || echo "none" > /data/fe/hello-ui/deploy/.previous_tag_ui
 # cat /data/fe/hello-ui/deploy/.previous_tag_ui
 
-kubectl delete deployment hello-ui --ignore-not-found
-kubectl delete svc hello-ui-svc --ignore-not-found
-kubectl delete pod -l app=hello-ui
+kubectl delete deployment $module --ignore-not-found
+kubectl delete svc $service --ignore-not-found
+kubectl delete pod -l app=$module
 
 log_step "Apply hello-ui manifest"
-kubectl apply -f /data/fe/hello-ui/deploy/hello-ui.yaml
+kubectl apply -f "$deploy_path/hello-ui.yaml"
 
 log_step "Roll out latest UI image"
-kubectl set image deployment/hello-ui hello-ui="$UI_IMAGE"
+kubectl set image deployment/$module $module="$ui_image"
 
 log_step "Wait for rollout to finish"
-kubectl rollout status deployment/hello-ui
+kubectl rollout status deployment/$module
 
 
 log_info "deploy-ui complete on k8master."

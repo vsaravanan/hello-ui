@@ -8,12 +8,11 @@ set -euo pipefail
 START_TIME=$(date +%s)
 
 
-REMOTE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-source "$REMOTE_DIR/environment.sh"
-source "$REMOTE_DIR/common.sh"
+source "$deploy_path/environment.sh"
+source "$deploy_path/common.sh"
 
 log_step "check out source code"
-cd /data/fe/hello-ui/deploy
+cd "$deploy_path"
 
 git reset --hard
 git fetch 
@@ -23,38 +22,38 @@ chmod +x  *.sh deploy/*.sh
 
 
 log_step "Install dependencies with pnpm"
-cd /data/fe/hello-ui
+cd "$project_path"
 pnpm install --frozen-lockfile
 
 log_step "Build with pnpm"
-cd /data/fe/hello-ui
+cd "$project_path"
 pnpm build
 
 log_step "Build image with Buildah"
-cd /data/fe/hello-ui
+cd "$project_path"
 
 
 if [ "${1:-}" = "base" ]; then
     log_step "🚀 Building base image..."
-    buildah bud -t "$UI_IMAGE_BASE" -f deploy/Dockerfile.base
-    buildah push --tls-verify=false "$UI_IMAGE_BASE" "docker://${UI_IMAGE_BASE}"
+    buildah bud -t "$ui_image_base" -f deploy/Dockerfile.base
+    buildah push --tls-verify=false "$ui_image_base" "docker://${ui_image_base}"
     log_step "✅ Base image built and pushed!"
 fi
 
-mv /data/fe/hello-ui/deploy/.current_tag_ui /data/fe/hello-ui/deploy/.previous_tag_ui
-buildah bud -t "$UI_IMAGE" -f deploy/Dockerfile .
+mv "$deploy_path/.current_tag_ui" "$deploy_path/.previous_tag_ui"
+buildah bud -t "$ui_image" -f deploy/Dockerfile .
 
 log_step "Record current git commit as the deployment tag"
-git rev-parse --short HEAD > /data/fe/hello-ui/deploy/.current_tag_ui
-cat /data/fe/hello-ui/deploy/.current_tag_ui
+git rev-parse --short HEAD > "$deploy_path/.current_tag_ui"
+cat "$deploy_path/.current_tag_ui"
 
 log_step "Push image to registry"
 buildah push --tls-verify=false \
-    "${UI_IMAGE}" "docker://${UI_IMAGE}"
+    "${ui_image}" "docker://${ui_image}"
 
-log_info "build-ui complete on k8master. Image: $UI_IMAGE"
+log_info "build-ui complete on k8master. Image: $ui_image"
 
-kubectl delete pod -l app=hello-ui
+kubectl delete pod -l app=$module
 
 
 

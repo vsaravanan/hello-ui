@@ -4,12 +4,11 @@
 
 set -euo pipefail
 
-REMOTE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-source "$REMOTE_DIR/environment.sh"
-source "$REMOTE_DIR/common.sh"
+source "$deploy_path/environment.sh"
+source "$deploy_path/common.sh"
 
 log_step "Read previous image tag"
-PREVIOUS_TAG="$(cat /data/fe/hello-ui/deploy/.previous_tag_ui)"
+PREVIOUS_TAG="$(cat "$deploy_path/.previous_tag_ui")"
 echo "$PREVIOUS_TAG"
 
 if [ "$PREVIOUS_TAG" = "none" ]; then
@@ -18,9 +17,9 @@ if [ "$PREVIOUS_TAG" = "none" ]; then
 fi
 
 log_step "Roll back hello-ui deployment"
-kubectl set image deployment/hello-ui hello-ui="$PREVIOUS_TAG"
+kubectl set image deployment/$module $module="$PREVIOUS_TAG"
 
 log_step "Wait for rollback rollout to finish"
-kubectl rollout status deployment/hello-ui
+kubectl rollout status deployment/$module
 
 log_info "rollback-ui complete on k8master."
