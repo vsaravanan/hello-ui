@@ -5,6 +5,8 @@ kubectl delete svc nginx-test --ignore-not-found
 kubectl delete deployment hello-ui --ignore-not-found
 kubectl delete svc hello-ui-svc --ignore-not-found
 
+kubectl delete pod -l app=hello-ui
+
 clear; kubectl get all -A 
 
 
