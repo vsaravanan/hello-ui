@@ -56,10 +56,6 @@ log_info "build-ui complete on k8master. Image: $UI_IMAGE"
 
 kubectl delete pod -l app=hello-ui
 
-END_TIME=$(date +%s)
-ELAPSED=$((END_TIME - START_TIME))
-MINUTES=$((ELAPSED / 60))
-SECONDS=$((ELAPSED % 60))
 
 
 log_time START_TIME
