@@ -24,13 +24,11 @@ chmod +x  *.sh deploy/*.sh || true
 
 
 log_step "Install dependencies with pnpm"
-cd '$project_path'
-pwd
-exit 0
+cd "$project_path"
 pnpm install --frozen-lockfile
 
 log_step "Build with pnpm"
-cd '$project_path'
+cd "$project_path"
 pnpm build
 
 log_step "Build image with Buildah"
