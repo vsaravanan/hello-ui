@@ -20,7 +20,7 @@ git reset --hard
 git fetch 
 git checkout 
 git pull 
-chmod +x  *.sh deploy/*.sh
+chmod +x  *.sh deploy/*.sh || true
 
 
 log_step "Install dependencies with pnpm"
