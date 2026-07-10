@@ -47,8 +47,8 @@ if [ "${1:-}" = "base" ]; then
 fi
 
 mv "$deploy_path/.current_tag_ui" "$deploy_path/.previous_tag_ui"  || true
-log_step '🚀 buildah building latest image  $ui_image ...
-buildah bud -t "$ui_image" -f deploy/Dockerfile .'
+log_step "🚀 buildah building latest image  $ui_image ...
+buildah bud -t '$ui_image' -f deploy/Dockerfile ."
 buildah bud -t "$ui_image" -f deploy/Dockerfile .
 
 log_step "Record current git commit as the deployment tag"
