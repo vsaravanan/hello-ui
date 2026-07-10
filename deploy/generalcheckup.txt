@@ -36,3 +36,12 @@ default       deployment.apps/hello-ui    1/1     1            1           3h29m
 default       replicaset.apps/hello-api-d74cb56d5   1         1         1       5h10m
 default       replicaset.apps/hello-ui-587b4b5484   1         1         1       3h29m
 
+
+$ grep -rn Port --include=*.yaml .
+./backup/files/hello-api.yaml:21:            - containerPort: 8080
+./backup/files/hello-api.yaml:28:  type: NodePort
+./backup/files/hello-api.yaml:33:      targetPort: 8080
+./backup/files/hello-api.yaml:34:      nodePort: 30080
+./backup/files/hello-ui.yaml:21:            - containerPort: 3000
+./backup/files/hello-ui.yaml:28:  type: NodePort
+./backup/files/hello-ui.yaml:33:      targetPort: 3000
