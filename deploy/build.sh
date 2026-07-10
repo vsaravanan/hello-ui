@@ -24,11 +24,13 @@ chmod +x  *.sh deploy/*.sh || true
 
 
 log_step "Install dependencies with pnpm"
-cd "$project_path"
+cd '$project_path'
+pwd
+exit 0
 pnpm install --frozen-lockfile
 
 log_step "Build with pnpm"
-cd "$project_path"
+cd '$project_path'
 pnpm build
 
 log_step "Build image with Buildah"
@@ -49,7 +51,7 @@ fi
 mv "$deploy_path/.current_tag_ui" "$deploy_path/.previous_tag_ui"  || true
 log_step "🚀 buildah building latest image  $ui_image ...
 buildah bud -t '$ui_image' -f deploy/Dockerfile ."
-buildah bud -t "$ui_image" -f deploy/Dockerfile .
+buildah bud -t '$ui_image' -f deploy/Dockerfile .
 
 log_step "Record current git commit as the deployment tag"
 git rev-parse --short HEAD > "$deploy_path/.current_tag_ui"
