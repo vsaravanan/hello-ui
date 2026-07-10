@@ -37,7 +37,7 @@ cd "$project_path"
 
 
 if [ "${1:-}" = "base" ]; then
-    log_step "🚀 buildah building base image  $ui_image_base ...
+    log_step "🚀 buildah building base image ...
     buildah bud -t '$ui_image_base' -f deploy/Dockerfile.base "
     buildah bud -t "$ui_image_base" -f deploy/Dockerfile.base
 
