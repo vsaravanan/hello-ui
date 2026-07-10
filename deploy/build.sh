@@ -34,6 +34,7 @@ buildah push --tls-verify=false \
 
 log_info "build-ui complete on k8master. Image: $UI_IMAGE"
 
+kubectl delete pod -l app=hello-ui
 
 END_TIME=$(date +%s)
 ELAPSED=$((END_TIME - START_TIME))
