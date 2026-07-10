@@ -24,7 +24,7 @@ log_step "Build image with Buildah"
 cd /data/fe/hello-ui
 
 
-if [ "$1" = "base" ]; then
+if [ "${1:-}" = "base" ]; then
     log_step "🚀 Building base image..."
     buildah bud -t "$UI_IMAGE_BASE" -f deploy/Dockerfile.base
     buildah push --tls-verify=false "$UI_IMAGE_BASE" "docker://${UI_IMAGE_BASE}"
