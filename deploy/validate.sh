@@ -2,7 +2,7 @@
 # k8master-validate-ui.sh
 # Runs entirely on k8master (invoked via: bash k8master-validate-ui.sh)
 
-set -exuo pipefail
+set -euo pipefail
 
 REMOTE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$REMOTE_DIR/environment.sh"
