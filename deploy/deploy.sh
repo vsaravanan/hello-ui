@@ -21,8 +21,8 @@ kubectl delete svc $service --ignore-not-found
 kubectl delete pod -l app=$module
 
 log_step "Apply hello-ui manifest 
-kubectl apply -f '$deploy_path/hello-ui.yaml'"
-kubectl apply -f "$deploy_path/hello-ui.yaml"
+kubectl apply -f '$deploy_path/$module.yaml'"
+kubectl apply -f "$deploy_path/$module.yaml"
 
 log_step "Roll out latest UI image
 kubectl set image deployment/$module $module='$ui_image'"
@@ -33,6 +33,6 @@ kubectl rollout status deployment/$module"
 kubectl rollout status deployment/$module
 
 
-log_info "deploy-ui complete on k8master."
+log_info "deploy $module complete on $HOST."
 
 log_time START_TIME
