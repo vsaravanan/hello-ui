@@ -20,8 +20,8 @@ kubectl delete deployment $module --ignore-not-found
 kubectl delete svc $service --ignore-not-found
 kubectl delete pod -l app=$module
 
-log_step "Apply hello-ui manifest"
-log_step "kubectl apply -f $deploy_path/hello-ui.yaml"
+log_step "Apply hello-ui manifest \n
+    kubectl apply -f $deploy_path/hello-ui.yaml"
 kubectl apply -f "$deploy_path/hello-ui.yaml"
 
 log_step "Roll out latest UI image"
