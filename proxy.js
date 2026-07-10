@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 
-export async function middleware(request) {
+const proxy = async request => {
   const { pathname } = request.nextUrl
   console.log('🔵 Middleware running for:', pathname)
 
@@ -26,3 +26,5 @@ export async function middleware(request) {
 export const config = {
   matcher: ['/api/:path*'], // Run on all paths
 }
+
+export default proxy
