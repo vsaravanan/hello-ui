@@ -41,14 +41,14 @@ if [ "${1:-}" = "base" ]; then
     buildah bud -t '$ui_image_base' -f deploy/Dockerfile.base "
     buildah bud -t "$ui_image_base" -f deploy/Dockerfile.base
 
-    log_info "
+    log_step "
     buildah push --tls-verify=false '$ui_image_base' 'docker://${ui_image_base}'"
     buildah push --tls-verify=false "$ui_image_base" "docker://${ui_image_base}"
     log_step "✅ Base image built and pushed!"
 fi
 
 mv "$deploy_path/.current_tag_ui" "$deploy_path/.previous_tag_ui"  || true
-log_step "🚀 buildah building latest image  $ui_image ...
+log_step "🚀 buildah building latest image ...
 buildah bud -t '$ui_image' -f deploy/Dockerfile ."
 buildah bud -t "$ui_image" -f deploy/Dockerfile .
 
@@ -56,7 +56,10 @@ log_step "Record current git commit as the deployment tag"
 git rev-parse --short HEAD > "$deploy_path/.current_tag_ui"
 cat "$deploy_path/.current_tag_ui"
 
-log_step "buildah push image to registry ${ui_image}"
+log_step "buildah push image to registry 
+buildah push --tls-verify=false \
+    '${ui_image}' 'docker://${ui_image}' 
+    "
 buildah push --tls-verify=false \
     "${ui_image}" "docker://${ui_image}"
 
