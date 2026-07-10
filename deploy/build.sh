@@ -12,8 +12,8 @@ remote_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$remote_dir/common.sh"
 
 
-log_step "check out source code from $deploy_path"
-cd "$deploy_path"
+log_step "check out source code from $project_path"
+cd "$project_path"
 echo `pwd`
 
 git reset --hard
