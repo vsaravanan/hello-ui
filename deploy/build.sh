@@ -38,7 +38,7 @@ if [ "${1:-}" = "base" ]; then
     buildah bud -t "$api_image_base" -f deploy/Dockerfile.base
 
     mylog " buildah pushing base image to registry"
-    buildah push --tls-verify=false "$api_image_base" "docker://${api_image_base}"
+    buildah push --tls-verify=false "$api_image_base" "$registry_url/${api_image_base}"
     mylog "✅ Base image built and pushed!"
 fi
 
