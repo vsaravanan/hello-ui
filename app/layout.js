@@ -9,7 +9,7 @@ const Layout = ({ children }) => {
 
         <main>{children}</main>
 
-        <footer>© 2026 Hello UI v 2</footer>
+        <footer>© 2026 Hello UI v 3</footer>
       </body>
     </html>
   )
