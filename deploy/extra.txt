@@ -66,3 +66,10 @@ Device hello-ui-proxy added to k8master
 lxc config device add k8master javaapi proxy \
  listen=tcp:0.0.0.0:30080 \
  connect=tcp:192.168.100.10:30080
+
+
+Thousands of evicted pods are taking up space in etcd. Delete them in bulk.
+
+# Delete all evicted pods
+kubectl delete pods --field-selector=status.phase=Failed
+kubectl get pods | grep Evicted | awk '{print $1}' | xargs kubectl delete pod

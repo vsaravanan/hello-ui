@@ -44,7 +44,7 @@ IPs:
 
 kubectl get pod hello-ui-587b4b5484-m5rr7 -o yaml | grep -A 5 -B 5 ports
 
-root@k8master:/data/fe/hello-ui/deploy# kubectl get pod hello-ui-587b4b5484-m5rr7 -o yaml | grep -A 5 -B 5 po                  rts
+root@k8master:/data/fe/hello-ui/deploy# kubectl get pod hello-ui-587b4b5484-m5rr7 -o yaml | grep -A 5 -B 5 ports
 spec:
   containers:
   - image: k8master:5000/hello-ui:latest
