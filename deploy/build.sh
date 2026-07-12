@@ -69,8 +69,8 @@ fi
 log_info "Deleting pod for $module"
 kubectl delete pod -l app=$module
 
-mylog "Apply hello-ui manifest"
-echo kubectl apply -f "$deploy_path/$module.yaml"
+# mylog "Apply hello-ui manifest"
+# echo kubectl apply -f "$deploy_path/$module.yaml"
 
 mylog "Roll out latest UI image"
 kubectl set image deployment/$module $module="$api_image"
