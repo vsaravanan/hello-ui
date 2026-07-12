@@ -5,7 +5,7 @@
 # k8master-build-ui.sh before this runs, so this is a single stage -
 # no separate builder/runner containers, just package and run.
 
-FROM k8master:5000/hello-ui-base:latest
+FROM hello-ui-base:latest
 
 COPY . .
 
