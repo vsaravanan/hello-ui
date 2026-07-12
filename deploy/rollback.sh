@@ -22,9 +22,9 @@ start_log_file $logfile
 
 if image_exists "$myimage"; then
     log_info "image $myimage found "
-    exit 0
 else
     mylog "image $myimage not found in $registry_url"
+    exit 0
 fi
 
 kubectl scale deployment $module --replicas=0
