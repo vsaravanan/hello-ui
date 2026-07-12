@@ -15,7 +15,7 @@ source "$remote_dir/common.sh"
 
 tag2=$(clean_string "$1")
 
-myimage="${module}:${$tag2}"
+myimage="${module}:${tag2}"
 
 logfile=$(get_caller_script)
 start_log_file $logfile
