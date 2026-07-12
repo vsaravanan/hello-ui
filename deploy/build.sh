@@ -35,15 +35,18 @@ cd "$project_path"
 
 if [ "${1:-}" = "base" ]; then
     mylog "🚀 buildah building base image ..."
+    #  buildah bud -t hello-ui-base:latest -f deploy/Dockerfile.base:
     buildah bud -t "$myimage_base" -f deploy/Dockerfile.base
 
     mylog " buildah pushing base image to registry"
     buildah push --tls-verify=false "$myimage_base" "docker://${registry_url}/${myimage_base}"
+    # buildah push --tls-verify=false hello-ui-base:latest docker://k8master:5000/hello-ui-base:latest
     mylog "✅ Base image built and pushed!"
 fi
 
 mv "$deploy_path/.current_tag_ui" "$deploy_path/.previous_tag_ui"  || true
 mylog "🚀 buildah building latest image ..."
+# buildah bud -t hello-ui:latest -f deploy/Dockerfile .
 buildah bud -t "$myimage" -f deploy/Dockerfile .
 
 mylog "Record current git commit as the deployment tag"
@@ -51,6 +54,7 @@ git rev-parse --short HEAD > "$deploy_path/.current_tag"
 cat "$deploy_path/.current_tag"
 
 mylog "buildah push image to registry "
+# buildah push --tls-verify=false hello-ui:latest docker://k8master:5000/hello-ui:latest
 buildah push --tls-verify=false \
     "${myimage}" "docker://$registry_url/${myimage}"
 
@@ -58,6 +62,7 @@ if image_exists "$myimage"; then
     mylog "📤 Rename latest image with timestamp..."
     newname=$(renameWithTimestamp "$myimage")
 
+    # buildah tag hello-ui:latest hello-ui:20260712115422
     buildah tag "$myimage" "$newname"
 else
     mylog "no latest image found"
@@ -72,11 +77,13 @@ kubectl delete pod -l app=$module || true
 # echo kubectl apply -f "$deploy_path/$module.yaml"
 
 mylog "Roll out latest UI image"
+# kubectl set image deployment/hello-ui hello-ui=k8master:5000/hello-ui:latest
 kubectl set image deployment/$module $module="$registry_url/${myimage}"
 
 kubectl scale deployment $module --replicas=1
 
 mylog "Wait for rollout to finish"
+# kubectl rollout status deployment/hello-ui
 kubectl rollout status deployment/$module
 
 
