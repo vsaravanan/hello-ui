@@ -18,7 +18,8 @@ mylog "check out source code from $project_path"
 cd "$project_path"
 
 checkout
-
+mytag="$(git_tag)"
+myimage="${module}:${mytag}"
 
 mylog "Install dependencies with pnpm"
 cd "$project_path"
@@ -44,7 +45,9 @@ if [ "${1:-}" = "base" ]; then
     mylog "✅ Base image built and pushed!"
 fi
 
-mv "$deploy_path/.current_tag_ui" "$deploy_path/.previous_tag_ui"  || true
+mylog "Record current git commit as the deployment tag"
+echo "$mytag" | tee "$project_path/.current_tag"
+
 mylog "🚀 buildah building latest image ..."
 # buildah bud -t hello-ui:latest -f deploy/Dockerfile .
 buildah bud -t "$myimage" -f deploy/Dockerfile .
@@ -58,15 +61,15 @@ mylog "buildah push image to registry "
 buildah push --tls-verify=false \
     "${myimage}" "docker://$registry_url/${myimage}"
 
-if image_exists "$myimage"; then
-    mylog "📤 Rename latest image with timestamp..."
-    newname=$(renameWithTimestamp "$myimage")
+# if image_exists "$myimage"; then
+#     mylog "📤 Rename latest image with timestamp..."
+#     newname=$(renameWithTimestamp "$myimage")
 
-    # buildah tag hello-ui:latest hello-ui:20260712115422
-    buildah tag "$myimage" "$newname"
-else
-    mylog "no latest image found"
-fi
+#     # buildah tag hello-ui:latest hello-ui:20260712115422
+#     buildah tag "$myimage" "$newname"
+# else
+#     mylog "no latest image found"
+# fi
 
 kubectl scale deployment $module --replicas=0
 

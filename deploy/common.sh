@@ -74,6 +74,7 @@ renameWithTimestamp() {
 
 checkout() {
     mylog "checkout"
+    cd "$project_path"
     git reset --hard
     git fetch
     git checkout
@@ -89,4 +90,21 @@ check_status() {
     mylog "docker images"
     buildah images
 
+}
+
+git_tag() {
+    cd "$project_path"
+
+    local tag
+    local tag2
+    tag="$(git rev-parse --short HEAD)"
+    tag2="$(git log -1 --pretty=%s | tr -d '[:space:]' | cut -c1-10)"
+    tag2=$(clean_string "$tag2")
+    echo "$tag-$tag2"
+}
+
+
+clean_string() {
+    local input="$1"
+    echo "$input" | sed 's/[^a-zA-Z0-9._-]/-/g'
 }
