@@ -21,7 +21,7 @@ mylog "Apply hello-ui manifest"
 echo kubectl apply -f "$deploy_path/$module.yaml"
 
 mylog "Roll out latest UI image"
-kubectl set image deployment/$module $module="$api_image"
+kubectl set image deployment/$module $module="$myimage"
 
 mylog "Wait for rollout to finish"
 kubectl rollout status deployment/$module

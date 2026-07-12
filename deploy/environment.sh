@@ -10,8 +10,8 @@ module=hello-ui
 service="$module-svc"
 project_path=/data/fe/hello-ui
 deploy_path="$project_path/deploy"
-registry_url="docker://k8master:5000"
-api_image_base="hello-ui-base:latest"
-api_image="hello-ui:latest"
+registry_url="k8master:5000"
+myimage_base="hello-ui-base:latest"
+myimage="hello-ui:latest"
 
 
