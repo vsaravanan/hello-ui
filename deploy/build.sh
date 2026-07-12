@@ -11,11 +11,8 @@ source "$remote_dir/common.sh"
 logfile=$(get_caller_script)
 start_log_file $logfile
 
-mylog "check status of registry and hello"
-kubectl get all -A | grep -E "registry|hello" || true
+check_status
 
-mylog "docker images"
-buildah images
 
 mylog "check out source code from $project_path"
 cd "$project_path"
@@ -66,27 +63,24 @@ else
     mylog "no latest image found"
 fi
 
-log_info "Deleting pod for $module"
-kubectl delete pod -l app=$module
+# log_info "Deleting pod for $module"
+# kubectl delete pod -l app=$module
 
 # mylog "Apply hello-ui manifest"
 # echo kubectl apply -f "$deploy_path/$module.yaml"
 
-mylog "Roll out latest UI image"
-kubectl set image deployment/$module $module="$api_image"
+# mylog "Roll out latest UI image"
+# kubectl set image deployment/$module $module="$api_image"
 
-mylog "Wait for rollout to finish"
-kubectl rollout status deployment/$module
+# mylog "Wait for rollout to finish"
+# kubectl rollout status deployment/$module
 
 
-mylog "check status of registry and hello"
-kubectl get all -A | grep -E "registry|hello" || true
+check_status
 
 mylog "check status of Evicted and Error"
 kubectl get all -A | grep -E "Evicted|Error" || true
 
-mylog "buildah images"
-buildah images
 
 log_info "build complete on ${HOST}. Image: $api_image"
 
