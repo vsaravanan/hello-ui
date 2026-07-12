@@ -8,12 +8,10 @@ remote_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$remote_dir/common.sh"
 
 
-log_step "Check $module pod status
-kubectl get pods -l app=$module"
+mylog "Check $module pod status"
 kubectl get pods -l app=$module
 
-log_step "Wait for $module pod to be Ready
-kubectl wait --for=condition=Ready pod -l app=$module --timeout=60s"
+mylog "Wait for $module pod to be Ready"
 kubectl wait --for=condition=Ready pod -l app=$module --timeout=60s
 
 log_info "validate-ui complete on k8master."

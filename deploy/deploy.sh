@@ -2,37 +2,39 @@
 # k8master-deploy-ui.sh
 # Runs entirely on k8master (invoked via: bash k8master-deploy-ui.sh <image>)
 
-set -euo pipefail
-
-START_TIME=$(date +%s)
-
+set -exuo pipefail
 
 remote_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$remote_dir/common.sh"
 
+logfile=$(get_caller_script)
+start_log_file $logfile
 
 
-# log_step "Save current image as previous tag (for rollback)"
-# kubectl get deployment hello-ui -o jsonpath='{.spec.template.spec.containers[0].image}' > /data/fe/hello-ui/deploy/.previous_tag_ui 2>/dev/null || echo "none" > /data/fe/hello-ui/deploy/.previous_tag_ui
-# cat /data/fe/hello-ui/deploy/.previous_tag_ui
 
-kubectl delete deployment $module --ignore-not-found
-kubectl delete svc $service --ignore-not-found
-kubectl delete pod -l app=$module
 
-log_step "Apply hello-ui manifest 
-kubectl apply -f '$deploy_path/$module.yaml'"
-kubectl apply -f "$deploy_path/$module.yaml"
+# kubectl delete deployment $module --ignore-not-found
+# kubectl delete svc $service --ignore-not-found
+# kubectl delete pod -l app=$module
 
-log_step "Roll out latest UI image
-kubectl set image deployment/$module $module='$ui_image'"
-kubectl set image deployment/$module $module="$ui_image"
+mylog "Apply hello-ui manifest"
+echo kubectl apply -f "$deploy_path/$module.yaml"
 
-log_step "Wait for rollout to finish
-kubectl rollout status deployment/$module"
+mylog "Roll out latest UI image"
+kubectl set image deployment/$module $module="$api_image"
+
+mylog "Wait for rollout to finish"
 kubectl rollout status deployment/$module
 
+mylog "check status of registry and hello"
+kubectl get all -A | grep -E "registry|hello" || true
+
+mylog "check status of Evicted and Error"
+kubectl get all -A | grep -E "Evicted|Error" || true
+
+mylog "buildah images"
+buildah images
 
 log_info "deploy $module complete on $HOST."
 
-log_time START_TIME
+log_time

@@ -3,72 +3,92 @@
 # Runs entirely on k8master (invoked via: bash k8master-build-ui.sh <image>)
 # The repo is already synced by the host script before this runs.
 
-set -euo pipefail
-
-START_TIME=$(date +%s)
-
+set -exuo pipefail
 
 remote_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$remote_dir/common.sh"
 
+logfile=$(get_caller_script)
+start_log_file $logfile
 
-log_step "check out source code from $project_path"
+mylog "check status of registry and hello"
+kubectl get all -A | grep -E "registry|hello" || true
+
+mylog "docker images"
+buildah images
+
+mylog "check out source code from $project_path"
 cd "$project_path"
-echo `pwd`
 
-git reset --hard
-git fetch 
-git checkout 
-git pull 
-chmod +x  *.sh deploy/*.sh || true
+checkout
 
 
-log_step "Install dependencies with pnpm"
+mylog "Install dependencies with pnpm"
 cd "$project_path"
 pnpm install --frozen-lockfile
 
-log_step "Build with pnpm"
+mylog "Build with pnpm"
 cd "$project_path"
 pnpm build
 
-log_step "Build image with Buildah"
+mylog "Build image with Buildah"
 cd "$project_path"
 
 
 
 if [ "${1:-}" = "base" ]; then
-    log_step "🚀 buildah building base image ...
-    buildah bud -t '$ui_image_base' -f deploy/Dockerfile.base "
-    buildah bud -t "$ui_image_base" -f deploy/Dockerfile.base
+    mylog "🚀 buildah building base image ..."
+    buildah bud -t "$api_image_base" -f deploy/Dockerfile.base
 
-    log_step "
-    buildah push --tls-verify=false '$ui_image_base' 'docker://${ui_image_base}'"
-    buildah push --tls-verify=false "$ui_image_base" "docker://${ui_image_base}"
-    log_step "✅ Base image built and pushed!"
+    mylog " buildah pushing base image to registry"
+    buildah push --tls-verify=false "$api_image_base" "docker://${api_image_base}"
+    mylog "✅ Base image built and pushed!"
 fi
 
 mv "$deploy_path/.current_tag_ui" "$deploy_path/.previous_tag_ui"  || true
-log_step "🚀 buildah building latest image ...
-buildah bud -t '$ui_image' -f deploy/Dockerfile ."
-buildah bud -t "$ui_image" -f deploy/Dockerfile .
+mylog "🚀 buildah building latest image ..."
+buildah bud -t "$api_image" -f deploy/Dockerfile .
 
-log_step "Record current git commit as the deployment tag"
-git rev-parse --short HEAD > "$deploy_path/.current_tag_ui"
-cat "$deploy_path/.current_tag_ui"
+mylog "Record current git commit as the deployment tag"
+git rev-parse --short HEAD > "$deploy_path/.current_tag"
+cat "$deploy_path/.current_tag"
 
-log_step "buildah push image to registry 
+mylog "buildah push image to registry "
 buildah push --tls-verify=false \
-    '${ui_image}' 'docker://${ui_image}' 
-    "
-buildah push --tls-verify=false \
-    "${ui_image}" "docker://${ui_image}"
+    "${api_image}" "$registry_url/${api_image}"
 
+if image_exists "$api_image"; then
+    mylog "📤 Rename latest image with timestamp..."
+    newname=$(renameWithTimestamp "$api_image")
 
-log_info "
-kubectl delete pod -l app=$module"
+    buildah tag "$api_image" "$newname"
+else
+    mylog "no latest image found"
+fi
+
+log_info "Deleting pod for $module"
 kubectl delete pod -l app=$module
 
-log_info "build-ui complete on ${HOST}. Image: $ui_image"
+mylog "Apply hello-ui manifest"
+echo kubectl apply -f "$deploy_path/$module.yaml"
+
+mylog "Roll out latest UI image"
+kubectl set image deployment/$module $module="$api_image"
+
+mylog "Wait for rollout to finish"
+kubectl rollout status deployment/$module
 
 
-log_time START_TIME
+mylog "check status of registry and hello"
+kubectl get all -A | grep -E "registry|hello" || true
+
+mylog "check status of Evicted and Error"
+kubectl get all -A | grep -E "Evicted|Error" || true
+
+mylog "buildah images"
+buildah images
+
+log_info "build complete on ${HOST}. Image: $api_image"
+
+
+log_time 

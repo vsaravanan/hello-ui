@@ -4,12 +4,14 @@
 # This file lives inside the hello-ui repo, so it's identical on the
 # host and on k8master once git pull has synced them.
 
+HOST="k8master"
 git_url="https://github.com/vsaravanan/hello-ui.git"
 module=hello-ui
-service=hello-ui-svc
+service="$module-svc"
 project_path=/data/fe/hello-ui
-deploy_path=/data/fe/hello-ui/deploy
-ui_image_base="k8master:5000/hello-ui-base:latest"
-ui_image="k8master:5000/hello-ui:latest"
+deploy_path="$project_path/deploy"
+registry_url="docker://k8master:5000"
+api_image_base="hello-ui-base:latest"
+api_image="hello-ui:latest"
 
-HOST="k8master"
+
