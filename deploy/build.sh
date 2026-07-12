@@ -63,6 +63,8 @@ else
     mylog "no latest image found"
 fi
 
+kubectl scale deployment $module --replicas=0
+
 log_info "Deleting pod for $module"
 kubectl delete pod -l app=$module || true
 
