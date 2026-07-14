@@ -18,4 +18,4 @@ ENV NODE_ENV=production
 
 EXPOSE 3030
 # CMD ["pnpm","start","--","--port","3030"]
-CMD ["sh","-c","pnpm start -- --port ${PORT:-3030}"]
+CMD ["sh","-c","pnpm start -p ${PORT:-3030}"]
