@@ -70,20 +70,10 @@ mylog "delete deployment $module"
 kubectl delete deployment $module
 
 mylog "Apply $module manifest"
-echo kubectl apply -f "$deploy_path/$module.yaml"
+kubectl apply -f "$deploy_path/$module.yaml"
 
 mylog "wait for deployment"
 kubectl wait --for=create deployment/$module --timeout=30s
-
-# log_info "Deleting pod for $module"
-# kubectl delete pod -l app=$module || true
-
-# mylog "Roll out latest UI image"
-# # kubectl set image deployment/hello-ui hello-ui=k8master:5000/hello-ui:latest
-
-# if ! kubectl set image deployment/$module $module="$registry_url/${myimage}"; then
-#     kubectl create deployment "$module" --image="$registry_url/${myimage}"
-# fi
 
 kubectl scale deployment $module --replicas=1
 
@@ -102,3 +92,16 @@ log_info "build complete on ${HOST}. Image: $myimage"
 
 
 log_time 
+
+
+
+
+# log_info "Deleting pod for $module"
+# kubectl delete pod -l app=$module || true
+
+# mylog "Roll out latest UI image"
+# # kubectl set image deployment/hello-ui hello-ui=k8master:5000/hello-ui:latest
+
+# if ! kubectl set image deployment/$module $module="$registry_url/${myimage}"; then
+#     kubectl create deployment "$module" --image="$registry_url/${myimage}"
+# fi
