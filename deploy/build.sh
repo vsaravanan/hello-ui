@@ -61,30 +61,26 @@ mylog "buildah push image to registry "
 buildah push --tls-verify=false \
     "${myimage}" "docker://$registry_url/${myimage}"
 
-# if image_exists "$myimage"; then
-#     mylog "📤 Rename latest image with timestamp..."
-#     newname=$(renameWithTimestamp "$myimage")
-
-#     # buildah tag hello-ui:latest hello-ui:20260712115422
-#     buildah tag "$myimage" "$newname"
-# else
-#     mylog "no latest image found"
-# fi
+mylog "tag ${myimage}  $module:latest"
+buildah tag "${myimage}"  "$module:latest"
 
 kubectl scale deployment $module --replicas=0
 
-log_info "Deleting pod for $module"
-kubectl delete pod -l app=$module || true
+mylog "delete deployment $module"
+kubectl delete deployment $module
 
-# mylog "Apply hello-ui manifest"
-# echo kubectl apply -f "$deploy_path/$module.yaml"
+mylog "Apply $module manifest"
+echo kubectl apply -f "$deploy_path/$module.yaml"
 
-mylog "Roll out latest UI image"
-# kubectl set image deployment/hello-ui hello-ui=k8master:5000/hello-ui:latest
+# log_info "Deleting pod for $module"
+# kubectl delete pod -l app=$module || true
 
-if ! kubectl set image deployment/$module $module="$registry_url/${myimage}"; then
-    kubectl create deployment "$module" --image="$registry_url/${myimage}"
-fi
+# mylog "Roll out latest UI image"
+# # kubectl set image deployment/hello-ui hello-ui=k8master:5000/hello-ui:latest
+
+# if ! kubectl set image deployment/$module $module="$registry_url/${myimage}"; then
+#     kubectl create deployment "$module" --image="$registry_url/${myimage}"
+# fi
 
 kubectl scale deployment $module --replicas=1
 
