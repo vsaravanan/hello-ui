@@ -5,7 +5,7 @@ metadata:
   labels:
     app: hello-ui
 spec:
-  replicas: 0
+  replicas: 1
   selector:
     matchLabels:
       app: hello-ui
@@ -18,8 +18,14 @@ spec:
         - name: hello-ui
           image: k8master:5000/hello-ui:latest
           # imagePullPolicy: Always  # This ensures it always pulls the latest
+          # args:
+          #   - "--port"
+          #   - "3030"
+          env:
+          - name: PORT
+            value: "3030"
           ports:
-            - containerPort: 3000
+            - containerPort: 3030
 ---
 apiVersion: v1
 kind: Service
@@ -30,6 +36,7 @@ spec:
   selector:
     app: hello-ui
   ports:
-    - port: 3000         # Service port
-      targetPort: 3000   # Pod port or container port
+    - name: http
+      port: 3000         # Service port
+      targetPort: 3030   # Pod port or container port
       nodePort: 30030    # External port (this works from host)

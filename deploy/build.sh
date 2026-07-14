@@ -81,7 +81,10 @@ kubectl delete pod -l app=$module || true
 
 mylog "Roll out latest UI image"
 # kubectl set image deployment/hello-ui hello-ui=k8master:5000/hello-ui:latest
-kubectl set image deployment/$module $module="$registry_url/${myimage}"
+
+if ! kubectl set image deployment/$module $module="$registry_url/${myimage}"; then
+    kubectl create deployment "$module" --image="$registry_url/${myimage}"
+fi
 
 kubectl scale deployment $module --replicas=1
 

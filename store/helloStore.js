@@ -6,10 +6,13 @@ import { sleep } from 'lib/utils'
 const getBaseUrl = () => {
   // Server-side: use internal service name
   if (typeof window === 'undefined') {
-    return NEXT_PUBLIC_BACKEND_URL
+    console.log(' NEXT_PUBLIC_BACKEND_URL ' + process.env.NEXT_PUBLIC_BACKEND_URL)
+    return process.env.NEXT_PUBLIC_BACKEND_URL
   }
+  console.log(' NEXT_PUBLIC_LOCAL_URL ' + process.env.NEXT_PUBLIC_LOCAL_URL)
+
   // Client-side: use exposed NodePort
-  return NEXT_PUBLIC_LOCAL_URL
+  return process.env.NEXT_PUBLIC_LOCAL_URL
 }
 
 const useHelloStore = create(set => ({
@@ -19,8 +22,8 @@ const useHelloStore = create(set => ({
   fetchHello: async () => {
     set({ loading: true, error: null })
     try {
-      // const path = `${getBaseUrl()}/hello`
-      const path = '/api/hello'
+      const path = `${getBaseUrl()}/api/hello`
+      // const path =  '/api/hello'
       console.log('Fetching from:', path) // Log the URL being fetched
       const response = await fetch(path)
       //   {
