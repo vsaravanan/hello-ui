@@ -20,6 +20,7 @@ cd "$project_path"
 checkout
 mytag="$(git_tag)"
 myimage="${module}:${mytag}"
+latestimage="${module}:latest"
 
 mylog "Install dependencies with pnpm"
 cd "$project_path"
@@ -50,24 +51,21 @@ echo "$mytag" | tee "$project_path/.current_tag"
 
 mylog "🚀 buildah building latest image ..."
 # buildah bud -t hello-ui:latest -f deploy/Dockerfile .
-buildah bud -t "$myimage" -f deploy/Dockerfile .
+buildah bud -t "${latestimage}" -f deploy/Dockerfile .
 
-mylog "Record current git commit as the deployment tag"
-git rev-parse --short HEAD > "$deploy_path/.current_tag"
-cat "$deploy_path/.current_tag"
 
 mylog "buildah push image to registry "
 # buildah push --tls-verify=false hello-ui:latest docker://k8master:5000/hello-ui:latest
 buildah push --tls-verify=false \
-    "${myimage}" "docker://$registry_url/${myimage}"
+    "${latestimage}" "docker://$registry_url/${latestimage}"
 
-mylog "tag ${myimage}  $module:latest"
-buildah tag "${myimage}"  "$module:latest"
+mylog "tag   to ${myimage}"
+buildah tag  ${latestimage} "${myimage}"
 
-kubectl scale deployment $module --replicas=0
+kubectl scale deployment $module --replicas=0 || true
 
 mylog "delete deployment $module"
-kubectl delete deployment $module
+kubectl delete deployment $module --ignore-not-found
 
 mylog "Apply $module manifest"
 kubectl apply -f "$deploy_path/$module.yaml"
